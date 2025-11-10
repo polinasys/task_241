@@ -4,13 +4,14 @@ Task 1
 Systemd юнит - это конфигурационный файл, который описывает как systemd должен управлять службой, сокетом, устройством, точкой монтирования и другими системными объектами.
 
 Основные типы юнитов:
-service - системные службы и демоны
+service - системные службы
 socket - сокеты для активации по требованию
 timer - планировщик задач (замена cron)
 mount - точки монтирования
 target - группы юнитов (аналог runlevels)
 
 2. Проверье статус любого systemd юнита, какую информацию выводит эта команда?
+su -
 systemctl status ssh или
 systemctl status ssh.service
 
@@ -99,8 +100,9 @@ cd ~ # Выполняется из домашней директории.
 Task 3
 Журнальчики
 1. Посмотретите журналы ssh
-sudo journalctl -u ssh
-sudo journalctl -u ssh.service
+su -
+journalctl -u ssh
+journalctl -u ssh.service
 
 2. Выведите журналы в реальном времени
 sudo journalctl -f
@@ -110,14 +112,15 @@ sudo journalctl -u ssh -f
 
 4. Можно ли без комады journalctl прочитать логи systemd?
 Да, можно несколькими способами:
+su -
 # 1. Через системные файлы
-sudo cat /var/log/syslog | grep ssh
+cat /var/log/syslog | grep ssh
 # 2. Через службу rsyslog
-sudo cat /var/log/auth.log | grep ssh
+cat /var/log/auth.log | grep ssh
 # 3. Через демона службы (если ведет собственный лог)
-sudo cat /var/log/ssh/*
+cat /var/log/ssh/*
 # 4. Просмотр бинарных журналов напрямую
-sudo strings /var/log/journal/*/system.journal | grep ssh
+strings /var/log/journal/*/system.journal | grep ssh
 
 5. Сколько будет 2-2?
 echo $((2 - 2))
