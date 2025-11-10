@@ -1,0 +1,124 @@
+Task 1
+Юниты
+1. Что такое systemd юнит?
+Systemd юнит - это конфигурационный файл, который описывает как systemd должен управлять службой, сокетом, устройством, точкой монтирования и другими системными объектами.
+
+Основные типы юнитов:
+service - системные службы и демоны
+socket - сокеты для активации по требованию
+timer - планировщик задач (замена cron)
+mount - точки монтирования
+target - группы юнитов (аналог runlevels)
+
+2. Проверье статус любого systemd юнита, какую информацию выводит эта команда?
+systemctl status ssh или
+systemctl status ssh.service
+
+3. ПОпробуйте оставновить сервис.
+sudo systemctl stop ssh
+
+4. Перезапустите его.
+sudo systemctl restart ssh
+
+5. УДалите из автозагрузки
+sudo systemctl disable ssh
+
+6. Верните обратно
+sudo systemctl enable ssh
+
+7. Что такое таймеры?
+Таймеры - это systemd юниты для планирования выполнения задач (аналог cron). Они могут запускать service юниты по расписанию.
+
+Task 2
+Пишем юниты
+1. Создайте скрипт который создаёт папку заполняет её файлами ( имена 1-4 ) и записывает в них информацию о текущей дате, версии ядра, имени компьютера и списе всех файлов в домашнем каталоге пользователя от которого выполняется скрипт( не забудьте сдлеать проверку на существование файлов и папок)
+#!/bin/bash
+set -euo pipefail
+
+cd ~
+
+mkdir -p system_info_data
+
+for i in 1 2 3 4; do
+    cat > "system_info_data/file$i.txt" << EOF
+Дата: $(date)
+Ядро: $(uname -r)
+Компьютер: $(hostname)
+Пользователь: $(whoami)
+
+Домашняя папка:
+$(ls -la ~)
+EOF
+done
+
+2. Создайте юнит, который будет вызывать этот скрипт при запуске. Проверьте
+[Unit]
+Description=System Info Collector
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/system_info_collector.sh
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
+3. Создайте таймер который будет вызывать выполнение одноимённого systemd юнита каждые 5 минут.
+[Unit]
+Description=Run every 5 minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target
+
+4. От какого пользователя вызыаются юниты по умолчанию?
+По умолчанию от root'а
+
+5. Создайте пользователя, от имени которого будет выполняться ваш скрипт.
+sudo useradd -m systemuser
+
+6. Дополните юнит информацией о пользователе, от которого должен выполняться скрипт.
+[Unit]
+Description=System Info Collector
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/system_info_collector.sh
+User=systemuser
+
+[Install]
+WantedBy=multi-user.target
+
+7. Дополните ваш скрипт так, чтобы он независимо от местоположения всегда выполнялся в домашней папке того, кто его вызывает.
+cd ~ # Выполняется из домашней директории.
+...
+
+Task 3
+Журнальчики
+1. Посмотретите журналы ssh
+sudo journalctl -u ssh
+sudo journalctl -u ssh.service
+
+2. Выведите журналы в реальном времени
+sudo journalctl -f
+
+3. Выведите лог в реальном времени для службы sshd
+sudo journalctl -u ssh -f
+
+4. Можно ли без комады journalctl прочитать логи systemd?
+Да, можно несколькими способами:
+# 1. Через системные файлы
+sudo cat /var/log/syslog | grep ssh
+# 2. Через службу rsyslog
+sudo cat /var/log/auth.log | grep ssh
+# 3. Через демона службы (если ведет собственный лог)
+sudo cat /var/log/ssh/*
+# 4. Просмотр бинарных журналов напрямую
+sudo strings /var/log/journal/*/system.journal | grep ssh
+
+5. Сколько будет 2-2?
+echo $((2 - 2))
+# Результат: 0
