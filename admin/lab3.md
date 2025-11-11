@@ -96,14 +96,14 @@ lsblk
 
 4. С помощью полученной информации создайте на диске таблицу разделов и фаловую систему ext4
 su -
-fdisk /dev/sda
+fdisk /dev/sdb
 # n → p → 1 → Enter → Enter → w
-mkfs.ext4 /dev/sda1
+mkfs.ext4 /dev/sdb1
 
 5. Примонитруте диск в каталог /mnt
 su -
 mkdir /mnt/mydisk
-mount /dev/sda1 /mnt/mydisk
+mount /dev/sdb1 /mnt/mydisk
 
 6. Зайдите в каталог и создайте там файлы
 su -
@@ -119,10 +119,10 @@ ls /mnt/mydisk/  # Файлов не видно
 
 8. Сделайте так чтобы диск автоматически подключался при загрузке систем (добавьте информацию о нём с fstab)
 su -
-blkid /dev/sda1  # Копируем UUID
+blkid /dev/sdb1  # Копируем UUID
 nano /etc/fstab
 # Открывается файл, идем в последнюю строку и записываем:
-UUID=66c44db3-12ac-437b-a36c-8dd1a0986eae /mnt/ext4 defaults 0 2
+UUID="d768371c-0333-4b95-8e4a-48db2f0bcb2b" /mnt/ext4 defaults 0 2
 
 9. Проверьте корретность записанных в fstab данных перед перезагрузкой
 mount -a
