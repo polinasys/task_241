@@ -12,20 +12,28 @@ target - группы юнитов (аналог runlevels)
 
 2. Проверье статус любого systemd юнита, какую информацию выводит эта команда?
 su -
-systemctl status ssh или
-systemctl status ssh.service
+systemctl status sshd 
+
+Эта команда показывает статус службы SSH демона (sshd):
+Состояние "active (running)"
+PID процесса
+Время работы
+Последние записи в логах
 
 3. ПОпробуйте оставновить сервис.
-sudo systemctl stop ssh
+systemctl stop sshd
+
+Проверяем:
+systemctl status sshd
 
 4. Перезапустите его.
-sudo systemctl restart ssh
+systemctl restart sshd
 
 5. УДалите из автозагрузки
-sudo systemctl disable ssh
+systemctl disable sshd
 
 6. Верните обратно
-sudo systemctl enable ssh
+systemctl enable sshd
 
 7. Что такое таймеры?
 Таймеры - это systemd юниты для планирования выполнения задач (аналог cron). Они могут запускать service юниты по расписанию.
@@ -101,14 +109,13 @@ Task 3
 Журнальчики
 1. Посмотретите журналы ssh
 su -
-journalctl -u ssh
-journalctl -u ssh.service
+journalctl -u sshd
 
 2. Выведите журналы в реальном времени
-sudo journalctl -f
+journalctl -f
 
 3. Выведите лог в реальном времени для службы sshd
-sudo journalctl -u ssh -f
+journalctl -u sshd -f
 
 4. Можно ли без комады journalctl прочитать логи systemd?
 Да, можно несколькими способами:
