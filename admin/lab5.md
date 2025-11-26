@@ -41,15 +41,33 @@ systemctl enable sshd
 Task 2
 Пишем юниты
 1. Создайте скрипт который создаёт папку заполняет её файлами ( имена 1-4 ) и записывает в них информацию о текущей дате, версии ядра, имени компьютера и списе всех файлов в домашнем каталоге пользователя от которого выполняется скрипт( не забудьте сдлеать проверку на существование файлов и папок)
+su -
+
+mkdir -p /usr/local/bin
+nano /usr/local/bin/system_info_collector.sh
+# Зписываем в открывшийся файла:
 #!/bin/bash
 set -euo pipefail
 
+# Всегда переходим в домашнюю директорию пользователя
 cd ~
 
-mkdir -p system_info_data
+# Проверяем и создаем папку
+if [ ! -d "system_info_data" ]; then
+    mkdir -p system_info_data
+    echo "Создана папка system_info_data"
+else
+    echo "Папка system_info_data уже существует"
+fi
 
+# Создаем 4 файла с информацией
 for i in 1 2 3 4; do
-    cat > "system_info_data/file$i.txt" << EOF
+    file_path="system_info_data/file$i.txt"
+    if [ -f "$file_path" ]; then
+        echo "Файл $file_path уже существует, перезаписываем"
+    fi
+    
+    cat > "$file_path" << EOF
 Дата: $(date)
 Ядро: $(uname -r)
 Компьютер: $(hostname)
@@ -58,9 +76,19 @@ for i in 1 2 3 4; do
 Домашняя папка:
 $(ls -la ~)
 EOF
+    echo "Создан файл $file_path"
 done
 
+echo "Скрипт выполнен успешно"
+
+# Делаем скрипт исполняемым
+chmod +x /usr/local/bin/system_info_collector.sh
+
 2. Создайте юнит, который будет вызывать этот скрипт при запуске. Проверьте
+su -
+nano /etc/systemd/system/system-info.service
+
+# Записываем
 [Unit]
 Description=System Info Collector
 
@@ -72,7 +100,16 @@ User=root
 [Install]
 WantedBy=multi-user.target
 
+# Тестируем
+systemctl daemon-reload
+systemctl start system-info.service
+systemctl status system-info.service
+
 3. Создайте таймер который будет вызывать выполнение одноимённого systemd юнита каждые 5 минут.
+su -
+nano /etc/systemd/system/system-info.timer
+
+# Записываем
 [Unit]
 Description=Run every 5 minutes
 
@@ -87,9 +124,14 @@ WantedBy=timers.target
 По умолчанию от root'а
 
 5. Создайте пользователя, от имени которого будет выполняться ваш скрипт.
-sudo useradd -m systemuser
+su -
+useradd -m systemuser
 
 6. Дополните юнит информацией о пользователе, от которого должен выполняться скрипт.
+su -
+nano /etc/systemd/system/system-info.service
+
+# Обновляем
 [Unit]
 Description=System Info Collector
 
@@ -100,6 +142,10 @@ User=systemuser
 
 [Install]
 WantedBy=multi-user.target
+
+# Обновляем
+systemctl daemon-reload
+chown systemuser:systemuser /usr/local/bin/system_info_collector.sh
 
 7. Дополните ваш скрипт так, чтобы он независимо от местоположения всегда выполнялся в домашней папке того, кто его вызывает.
 cd ~ # Выполняется из домашней директории.
