@@ -29,7 +29,7 @@ mv main.txt /home/eremenko/
 cp main.txt /home/eremenko/dir1/dir2/dir3/main.txt
 
 8.	переименовать файл:
-mv dir1/dir2/dir3/main_copy.txt dir1/dir2/dir3/renamed.txt
+mv dir1/dir2/dir3/main.txt dir1/dir2/dir3/renamed.txt
 
 9.	сравнить содержимое файла:
 diff dir1/dir2/dir3/renamed.txt main.txt
