@@ -18,19 +18,21 @@ ls -a - показать все файлы, вкдючая скрытые
 mkdir -p dir1/dir2/dir3
 
 5.	Внутри папки создать файлик и записать в него что-нибудь:
-echo "Hello, world" > dir3/main.txt
+cd dir1/dir2/dir3
+echo "Hello, world" > main.txt
 
 6.	Переместить файл из одной директории в другую: 
-mv home/admin/dir1/dir2/dir3/main.txt /home/admin/ 
+mv main.txt /home/eremenko/
 
 7.	скопировать файл из одной директории в другую: 
-cp dir3/main.txt /home/admin/
+# из домашней папки /home/eremenko/:
+cp main.txt /home/eremenko/dir1/dir2/dir3/main.txt
 
 8.	переименовать файл:
-mv dir3/main.txt  dir3/renamed.txt
+mv dir1/dir2/dir3/main_copy.txt dir1/dir2/dir3/renamed.txt
 
 9.	сравнить содержимое файла:
-diff dir3/renamed.txt /home/admin/main.txt
+diff dir1/dir2/dir3/renamed.txt main.txt
 
 10.	отсортировать содержимое файла по возрастанию и убыванию:
 sort dir1/dir2/dir3/renamed.txt - по возрастанию
@@ -53,10 +55,10 @@ Task 2
 - stderr - стардартный потом ошибок, по умолчсанию терминал
 
 3.	Вывести содержание файла не используя текстовые редакторы;
-- cat main.txt
+cat main.txt
 
 4.	Создать файл с содержимым не используя текстовые редактор;
-- echo "Third line" > main.txt
+echo "Third line" > main.txt
 
 5.	перенаправить stdout в stderr и обратно на примере команды kinit, ping, tracert
 kinit user 2> errors.txt # Перенаправляем stderr в файл
@@ -70,7 +72,7 @@ ping example.com > output.txt 2>&1 # Перенаправляем stdout и stde
 stdin - стандартный поток ввода, по умолчанию клавиатура
 
 8.	как отправить весь вывод команды в пустоту?
-- команда > /dev/null 
+команда > /dev/null 
 
 9.	можно ли отправить одновременно stdin и stdout в пустоту?
 Да, можно. Для этого нужно перенаправить поток вывода в файл /dev/null
