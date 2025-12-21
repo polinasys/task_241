@@ -3,14 +3,13 @@
 ip link show
 ip addr show
 ifconfig
-netstat -i
 
 2. Попробуйте изменить ip адрес
-sudo ip addr add 192.168.1.100/24 dev eth0
+sudo ip addr add 192.168.1.100/24 dev enp0s3
 
 3. Попробуте добавить несколько ip адресов на сетевую карту
-sudo ip addr add 192.168.1.101/24 dev eth0
-sudo ip addr add 192.168.1.102/24 dev eth0
+sudo ip addr add 192.168.1.101/24 dev enp0s3
+sudo ip addr add 192.168.1.102/24 dev enp0s3
 
 4. Выведите список маршрутов
 ip route show
@@ -47,18 +46,18 @@ NTP (Network Time Protocol) — один из протоколов синхро�
 
 14. Какие ещё параметры можно задать сетевой карте?
 MTU (Maximum Transmission Unit) - максимальный размер пакета. Определяет максимальный размер данных в одном сетевом пакете
-sudo ip link set eth0 mtu 1500
+sudo ip link set enp0s3 mtu 1500
 
 Включение/выключение интерфейса. Активирует или деактивирует сетевую карту. Аналогично физическому подключению/отключению кабеля.
-sudo ip link set eth0 up
-sudo ip link set eth0 down
+sudo ip link set enp0s3 up
+sudo ip link set enp0s3 down
 
 Изменение MAC-адреса. MAC-адрес - это уникальный физический идентификатор сетевого устройства. Можно временно изменить.
-sudo ip link set eth0 address 00:11:22:33:44:55
+sudo ip link set enp0s3 address 00:11:22:33:44:55
 
 Просмотр текущих настроек. Первая команда показывает основные параметры, вторая - детальную информацию о сетевой карте.
-ip link show eth0
-ethtool eth0
+ip link show enp0s3
+ethtool enp0s3
 
 15. Что такое маска подсети? зачем она нужна?
 Маска подсети определяет, какая часть IP-адреса относится к сети, а какая - к хосту. Нужна для разделения сети на подсети и маршрутизации.
