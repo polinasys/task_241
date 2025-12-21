@@ -2,12 +2,12 @@ Task 1
 Настриваем
 1. Какой по умолчанию используется порт для поключения?
 su -
-grep Port /etc/ssh/sshd_config
+grep Port /etc/openssh/sshd_config
 # По умолчанию: 22
 
 2. Можно ли его изменить? если да то как?
 # Редактируем конфиг
-nano /etc/ssh/sshd_config
+nano /etc/openssh/sshd_config
 # Находим строку #Port 22 и меняем на:
 Port 2222
 # Сохраняем и перезапускаем службу
@@ -18,40 +18,30 @@ systemctl status sshd
 # Имя службы: sshd (Secure Shell Daemon)
 
 4. Какой файл конфигурации отвечает за его настройку?
-/etc/ssh/sshd_config
+/etc/openssh/sshd_config
 
 5. Попробуйте подключиться по ssh к предоставленному вам серверу
 ssh student@ternar.io -p 215
 
 6. Отредактируйте файл настроек на сервере так, чтобы была возможность подключиться к серверу используя пользователя root
-sudo vi /etc/openssh/sshd_config
-
-# Меняем: 
-#PermitRootLogin without-rassword
-# на
-PermitRootLogin yes
-#^q!
-
+sudo sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/openssh/sshd_config
 sudo systemctl restart sshd
+sudo grep PermitRootLogin /etc/openssh/sshd_config
+
 7. Измените колличество ошибок ввода пароля перед сборосом соединения, покажите эти измененения
-sudo nano /etc/openssh/sshd_config
-
-# УБираем комментарий и меняем:
-MaxAuthTries 3
-
+sudo sed -i 's/#MaxAuthTries.*/MaxAuthTries 3/' /etc/openssh/sshd_config
 sudo grep MaxAuthTries /etc/openssh/sshd_config
-sudo sudosystemctl restart sshd
+sudo systemctl restart sshd
 
 8. Создайте пользователя ssh-user и попробуйте им подключиться к серверу
 sudo useradd -m ssh-user
 sudo passwd ssh-user
 
 9. Ограничте ему возможность подключения к серверу
-sudo vi /etc/openssh/sshd_config
-# Добавляем в конец файла
-DenyUsers ssh-user
-
+echo "DenyUsers ssh-user" | sudo tee -a /etc/openssh/sshd_config
+sudo grep DenyUsers /etc/openssh/sshd_config
 sudo systemctl restart sshd
+
 10. Как вы это сделали?
 Описано выше
 
