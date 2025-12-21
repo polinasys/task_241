@@ -77,3 +77,7 @@ find . -type f -exec ls -la {} \; | head -20
 
 # 13. Очистка 
 rm -rf "$WORK_DIR"
+
+# Запускаем
+chmod +x lab4_script.sh
+./lab4_script.sh
