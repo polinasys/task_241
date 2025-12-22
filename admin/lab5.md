@@ -166,13 +166,7 @@ journalctl -u sshd -f
 4. Можно ли без комады journalctl прочитать логи systemd?
 Да, можно несколькими способами:
 su -
-# 1. Через системные файлы
-cat /var/log/syslog | grep ssh
-# 2. Через службу rsyslog
-cat /var/log/auth.log | grep ssh
-# 3. Через демона службы (если ведет собственный лог)
-cat /var/log/ssh/*
-# 4. Просмотр бинарных журналов напрямую
+# Просмотр бинарных журналов напрямую
 strings /var/log/journal/*/system.journal | grep ssh
 
 5. Сколько будет 2-2?
