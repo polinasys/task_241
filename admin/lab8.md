@@ -1,4 +1,4 @@
-Шарим
+# Шарим
 1. Установите пакет samba
 su -
 apt-get update
@@ -65,6 +65,7 @@ nano /etc/samba/smb.conf
 
 systemctl restart smb
 
+![](screen3_lab8.jpg)
 6. Создайте общую папку в которой у одной группы будет полный доступ, а у другой только доступ на чтение. Третья группа не должна иметь к ней доступа
 groupadd fullaccess
 groupadd readonly
@@ -92,14 +93,17 @@ nano /etc/samba/smb.conf
 
 systemctl restart smb
 
-# Дополняю секцию global !
+#Дополняю секцию global !
     map to guest = bad user
     guest account = nobody 
+
+![](screen1_lab8.jpg)
 
 Разрешаю анонимный гостевой доступ к общей папке public без ввода пароля 
 
 Проверяем, что все работает:
 smbclient //localhost/public -N
+![](screen2_lab8.jpg)
 
 Вывод: Try "help" to get a list of possible commands.
 smb: \> help
@@ -122,4 +126,5 @@ vuid           wdel           logon          listconnect    showconnect
 tcon           tdis           tid            utimes         logoff         
 ..             !     
 smb: \> pwd
+
 Current directory is \\localhost\public\
