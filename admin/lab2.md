@@ -1,4 +1,4 @@
-<img width="2520" height="1680" alt="image" src="https://github.com/user-attachments/assets/0deb04cb-cd50-412d-8cba-123cbc1baafc" /># Task 1
+# Task 1
 # Управление пользователями 
 1.	Добавьте пользователей user1 и user2: 
 1.1) user1 - оболочка bash:
@@ -62,4 +62,5 @@ chage -E 0 user1 - истечение срока пароля
 
 5. Можно ли создать пользователей с одинаковыми username?
 Нет, так как username должен быть уникальным
+
 
