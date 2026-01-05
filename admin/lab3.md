@@ -165,7 +165,7 @@ mkfs.ext4 /dev/sdb
 mkfs.ext4 /dev/sdc
 
 3. Создайте из них raid 0 массив
-mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/sdb /dev/sdc
+mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/sda /dev/sdb
 ![](screen7_lab3.jpg)
 
 4. Проверье всё ли работает
@@ -174,9 +174,11 @@ cat /proc/mdstat
 
 5. Удалите raid0 и создайте raid1
 mdadm --stop /dev/md0
-mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sda /dev/sdb
+![](scren9_lab3.jpg)
+![](screen10_lab3.jpg)
 
-6. В чём между ними разница?
+7. В чём между ними разница?
 По надежности:
 RAID 0 абсолютно ненадежен - вышел из строя один диск, и все данные потеряны.
 RAID 1 очень надежен - система переживает отказ одного диска без потери данных.
@@ -199,3 +201,4 @@ ZFS реализует собственный вариант RAID — RAID-Z. Д
 8. Можно ли создать raid массив во время установки системы?
 
 Да, создать RAID-массив можно во время установки системы Linux с помощью утилиты mdadm (Multiple Device Administration). Это позволяет объединить несколько дисков в логический элемент, что повышает надёжность (кроме RAID 0) и увеличивает производительность.
+
