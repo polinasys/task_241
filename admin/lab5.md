@@ -1,5 +1,5 @@
-Task 1
-Юниты
+# Task 1
+# Юниты
 1. Что такое systemd юнит?
 Systemd юнит - это конфигурационный файл, который описывает как systemd должен управлять службой, сокетом, устройством, точкой монтирования и другими системными объектами.
 
@@ -13,6 +13,7 @@ target - группы юнитов (аналог runlevels)
 2. Проверье статус любого systemd юнита, какую информацию выводит эта команда?
 su -
 systemctl status sshd 
+![](screen1_lab5.jpg)
 
 Эта команда показывает статус службы SSH демона (sshd):
 Состояние "active (running)"
@@ -34,25 +35,28 @@ systemctl disable sshd
 
 6. Верните обратно
 systemctl enable sshd
+![](screen2_lab5.jpg)
 
-7. Что такое таймеры?
+8. Что такое таймеры?
 Таймеры - это systemd юниты для планирования выполнения задач (аналог cron). Они могут запускать service юниты по расписанию.
 
-Task 2
-Пишем юниты
+# Task 2
+# Пишем юниты
 1. Создайте скрипт который создаёт папку заполняет её файлами ( имена 1-4 ) и записывает в них информацию о текущей дате, версии ядра, имени компьютера и списе всех файлов в домашнем каталоге пользователя от которого выполняется скрипт( не забудьте сдлеать проверку на существование файлов и папок)
 su -
 
 mkdir -p /usr/local/bin
 nano /usr/local/bin/system_info_collector.sh
-# Зписываем в открывшийся файла:
+#Зписываем в открывшийся файла:
+![](screen3_lab5.jpg)
+
 #!/bin/bash
 set -euo pipefail
 
-# Всегда переходим в домашнюю директорию пользователя
+#Всегда переходим в домашнюю директорию пользователя
 cd ~
 
-# Проверяем и создаем папку
+#Проверяем и создаем папку
 if [ ! -d "system_info_data" ]; then
     mkdir -p system_info_data
     echo "Создана папка system_info_data"
@@ -60,7 +64,7 @@ else
     echo "Папка system_info_data уже существует"
 fi
 
-# Создаем 4 файла с информацией
+#Создаем 4 файла с информацией
 for i in 1 2 3 4; do
     file_path="system_info_data/file$i.txt"
     if [ -f "$file_path" ]; then
@@ -81,14 +85,16 @@ done
 
 echo "Скрипт выполнен успешно"
 
-# Делаем скрипт исполняемым
+#Делаем скрипт исполняемым
 chmod +x /usr/local/bin/system_info_collector.sh
 
 2. Создайте юнит, который будет вызывать этот скрипт при запуске. Проверьте
 su -
 nano /etc/systemd/system/system-info.service
 
-# Записываем
+#Записываем
+![](screen4_lab5.jpg)
+
 [Unit]
 Description=System Info Collector
 
@@ -100,16 +106,18 @@ User=root
 [Install]
 WantedBy=multi-user.target
 
-# Тестируем
+#Тестируем
 systemctl daemon-reload
 systemctl start system-info.service
 systemctl status system-info.service
+![](screen5_lab5.jpg)
 
 3. Создайте таймер который будет вызывать выполнение одноимённого systemd юнита каждые 5 минут.
 su -
 nano /etc/systemd/system/system-info.timer
+![](screen6_lab5.jpg)
 
-# Записываем
+#Записываем
 [Unit]
 Description=Run every 5 minutes
 
@@ -131,7 +139,8 @@ useradd -m systemuser
 su -
 nano /etc/systemd/system/system-info.service
 
-# Обновляем
+
+#Обновляем
 [Unit]
 Description=System Info Collector
 
@@ -143,7 +152,7 @@ User=systemuser
 [Install]
 WantedBy=multi-user.target
 
-# Обновляем
+#Обновляем
 systemctl daemon-reload
 chown systemuser:systemuser /usr/local/bin/system_info_collector.sh
 
@@ -151,24 +160,30 @@ chown systemuser:systemuser /usr/local/bin/system_info_collector.sh
 cd ~ # Выполняется из домашней директории.
 ...
 
-Task 3
-Журнальчики
+# Task 3
+# Журнальчики
 1. Посмотретите журналы ssh
 su -
 journalctl -u sshd
+![](screen8_lab5.jpg)
 
-2. Выведите журналы в реальном времени
+3. Выведите журналы в реальном времени
 journalctl -f
+![](screen7_lab5.jpg)
 
-3. Выведите лог в реальном времени для службы sshd
+4. Выведите лог в реальном времени для службы sshd
 journalctl -u sshd -f
+![](screen9_lab5.jpg)
 
-4. Можно ли без комады journalctl прочитать логи systemd?
+5. Можно ли без комады journalctl прочитать логи systemd?
 Да, можно несколькими способами:
 su -
-# Просмотр бинарных журналов напрямую
+#Просмотр бинарных журналов напрямую
 strings /var/log/journal/*/system.journal | grep ssh
+![](screen10_lab5.jpg)
 
-5. Сколько будет 2-2?
+6. Сколько будет 2-2?
 echo $((2 - 2))
-# Результат: 0
+
+#Результат: 0
+![](screen11_lab5.jpg)
